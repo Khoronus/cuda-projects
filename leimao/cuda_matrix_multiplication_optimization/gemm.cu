@@ -18,7 +18,14 @@ A, B, C and D, are stored in the row-major order on memory with the leading dime
 #include <string>
 
 #include <cuda_runtime.h>
+#include <cuda_fp16.h>
 #include <mma.h>
+
+template <typename T>
+using launch = void (*)(size_t m, size_t n, size_t k,
+                        T const* alpha, T const* A, size_t lda,
+                        T const* B, size_t ldb, T const* beta,
+                        T* C, size_t ldc, cudaStream_t stream);
 
 #define CHECK_CUDA_ERROR(val) check((val), #val, __FILE__, __LINE__)
 template <typename T>
@@ -1499,7 +1506,9 @@ void launch_gemm_kernel_v07_vectorized(size_t m, size_t n, size_t k,
 }
 
 // Host function to call the kernel launcher and measure FLOPs
-void call_gemm_kernel() {
+// Function to call the GEMM kernel
+template <typename T>
+void call_gemm_kernel(launch<T> func) {
     // Define matrix dimensions
     size_t m = 1024;
     size_t n = 1024;
@@ -1540,7 +1549,8 @@ void call_gemm_kernel() {
     cudaEventRecord(start, stream);
 
     // Launch the kernel
-    launch_gemm_kernel_v00(m, n, k, &alpha, d_A, k, d_B, n, &beta, d_C, n, stream);
+    //launch_gemm_kernel_v00(m, n, k, &alpha, d_A, k, d_B, n, &beta, d_C, n, stream);
+    func(m, n, k, &alpha, d_A, k, d_B, n, &beta, d_C, n, stream);
 
     // Record the stop event
     cudaEventRecord(stop, stream);
@@ -1587,6 +1597,13 @@ void call_gemm_kernel() {
 
 int main()
 {
-    call_gemm_kernel();
+    call_gemm_kernel(launch_gemm_kernel_v00<float>);
+    call_gemm_kernel(launch_gemm_kernel_v01<float>);
+    call_gemm_kernel(launch_gemm_kernel_v02<float>);
+    call_gemm_kernel(launch_gemm_kernel_v03<float>);
+    call_gemm_kernel(launch_gemm_kernel_v04<float>);
+    call_gemm_kernel(launch_gemm_kernel_v05_vectorized<float>);
+    call_gemm_kernel(launch_gemm_kernel_v06_vectorized<float>);
+    call_gemm_kernel(launch_gemm_kernel_v07_vectorized<float>);
     return 0;
 }
