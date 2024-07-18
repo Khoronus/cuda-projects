@@ -1,4 +1,4 @@
-# cuda memory allocation
+# flops
 
 The topic touch the flops operations.
 

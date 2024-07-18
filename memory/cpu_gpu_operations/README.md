@@ -1,4 +1,4 @@
-# cuda memory allocation
+# cpu gpu operation
 
 The topic touch the cpu and gpu operations.
 
