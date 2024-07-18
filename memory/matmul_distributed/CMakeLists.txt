@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name
-project(flops_multigpu)
+project(matmul_distributed)
 
 # Find CUDA
 find_package(CUDA REQUIRED)
@@ -12,11 +12,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add the source files
 set(SOURCES
-flops_multigpu.cu
+matmul_distributed.cu
 )
 
 # Add the executable
-cuda_add_executable(flops_multigpu ${SOURCES})
+cuda_add_executable(matmul_distributed ${SOURCES})
 
 # Set CUDA flags
 #set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -Xptxas -O0")
