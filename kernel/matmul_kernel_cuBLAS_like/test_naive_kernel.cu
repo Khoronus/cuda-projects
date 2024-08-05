@@ -1,6 +1,8 @@
+#include <gtest/gtest.h>
 #include "naive_kernel_impl.h"
 
-void test_naive() {
+// Test case
+TEST(AddNaiveKernelTest, Naive) {
     cudaStream_t stream;
     CHECK_CUDA_ERROR(cudaStreamCreate(&stream));
 
@@ -65,9 +67,11 @@ void test_naive() {
     checkCudaErrors(cudaFree(d_c));
 
     CHECK_CUDA_ERROR(cudaStreamDestroy(stream));
+
+    std::cout << "NaiveKernel completed successfully." << std::endl;
 }
 
-int main() {
-    test_naive();
-    return 0;
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
