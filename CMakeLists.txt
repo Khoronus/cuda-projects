@@ -40,7 +40,7 @@ enable_testing()
 
 # Add subdirectories for each project
 add_subdirectory(gemm/wmma)
-#add_subdirectory(kernel/cuda_kernel_fusion)
+add_subdirectory(kernel/cuda_kernel_fusion)
 add_subdirectory(kernel/matmul_kernel_cuBLAS_like)
 #add_subdirectory(memory/flops)
 
